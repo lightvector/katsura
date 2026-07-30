@@ -12,7 +12,8 @@ that on *read* (see :func:`sgf_to_move`) but always *write* passes as ``[]``.
 
 from __future__ import annotations
 
-from typing import Iterable, NamedTuple, Optional
+from typing import NamedTuple
+from collections.abc import Iterable
 
 # The SGF coordinate alphabet: a..z (0..25) then A..Z (26..51).
 _LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -60,7 +61,7 @@ def sgf_to_point(value: str) -> Point:
     return Point(_letter_to_index(value[0]), _letter_to_index(value[1]))
 
 
-def sgf_to_move(value: str, width: int, height: int) -> Optional[Point]:
+def sgf_to_move(value: str, width: int, height: int) -> Point | None:
     """Decode a ``move`` value, returning ``None`` for a pass.
 
     An empty value is a pass. The legacy ``tt`` pass is recognised when the
@@ -73,7 +74,7 @@ def sgf_to_move(value: str, width: int, height: int) -> Optional[Point]:
     return sgf_to_point(value)
 
 
-def move_to_sgf(p: Optional[Point]) -> str:
+def move_to_sgf(p: Point | None) -> str:
     """Encode a move (or a pass, when ``p`` is ``None``) as a move value."""
     if p is None:
         return ""

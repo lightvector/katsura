@@ -24,7 +24,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Optional
 
 from ..go.board import Board, BLACK, WHITE, EMPTY, MOVE_SUICIDE_MULTI
 from ..model.replay import apply_node
@@ -34,7 +33,7 @@ from .settings import AnalysisSettings, DEFAULT_RULES, clamp_komi, sgf_rules
 GTP_COLOR = {BLACK: "B", WHITE: "W"}
 
 
-def format_komi(komi: Optional[float]) -> Optional[str]:
+def format_komi(komi: float | None) -> str | None:
     """Format a komi float for GTP (``None`` stays ``None`` = leave engine default)."""
     if komi is None:
         return None
@@ -62,8 +61,8 @@ class AnalysisRequest:
     seq: int
     width: int
     height: int
-    rules: Optional[str]
-    komi: Optional[str]
+    rules: str | None
+    komi: str | None
     color: str                       # "B" / "W" — side to move at the target
     anchor_stones: tuple             # sorted ((color, vertex), ...) for set_position
     moves: tuple                     # ((color, vertex), ...) plays anchor -> target
@@ -104,8 +103,8 @@ def initial_settings(game) -> AnalysisSettings:
 
 
 def build_request(game, seq: int,
-                  settings: Optional[AnalysisSettings] = None,
-                  to_move: Optional[int] = None) -> AnalysisRequest:
+                  settings: AnalysisSettings | None = None,
+                  to_move: int | None = None) -> AnalysisRequest:
     """Build an :class:`AnalysisRequest` for ``game``'s current node.
 
     ``settings`` supplies the engine komi/rules/search-params; when omitted they
@@ -124,7 +123,7 @@ def build_request(game, seq: int,
 
     board = Board(w, h)
     boundary: list[bool] = []
-    plays: list[Optional[tuple]] = []
+    plays: list[tuple | None] = []
     boards: list[Board] = []
 
     for node in path:
@@ -135,7 +134,7 @@ def build_request(game, seq: int,
         # rest to decide boundaries and history.
         res = apply_node(node, board, BLACK, w, h)
 
-        node_play: Optional[tuple] = None
+        node_play: tuple | None = None
         is_boundary = node.parent is None or res.has_setup
         if res.has_move:
             if res.move_illegal:

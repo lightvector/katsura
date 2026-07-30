@@ -53,7 +53,7 @@ target-version = "py310"
 # Stated explicitly rather than inherited: ruff's default selection widens
 # between releases, and a lint gate whose meaning changes under you is worse
 # than no gate. Adding a rule family here should be a deliberate commit.
-select = ["E4", "E7", "E9", "F"]
+select = ["E4", "E7", "E9", "F", "UP"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests lean on `a = 1; b = 2` to keep multi-step GUI setup compact and

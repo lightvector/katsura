@@ -10,7 +10,6 @@ shown until this position has its own analysis.
 
 from __future__ import annotations
 
-from typing import Optional
 
 from PySide6.QtCore import Qt, QRectF, QPointF
 from PySide6.QtGui import QColor, QPainter, QPen, QFont
@@ -28,11 +27,11 @@ class WinrateBar(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self._wr: Optional[float] = None     # Black's winrate in [0, 1]
+        self._wr: float | None = None     # Black's winrate in [0, 1]
         self.setMinimumHeight(22)
         self.setMaximumHeight(22)
 
-    def set_winrate(self, wr: Optional[float]) -> None:
+    def set_winrate(self, wr: float | None) -> None:
         self._wr = None if wr is None else max(0.0, min(1.0, wr))
         self.update()
 
@@ -131,7 +130,7 @@ class AnalysisInfoPanel(QWidget):
 
         self.clear()
 
-    def set_stats(self, stats: Optional[PanelStats]) -> None:
+    def set_stats(self, stats: PanelStats | None) -> None:
         s = stats or PanelStats()
         if s.winrate_black is None:
             self.winrate_label.setText("Win —")

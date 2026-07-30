@@ -12,7 +12,6 @@ undo state.
 
 from __future__ import annotations
 
-from typing import Optional
 
 from ..go.board import (
     Board, BLACK, WHITE, EMPTY,
@@ -203,7 +202,7 @@ def fit_subtree_to_board(subtree: SgfNode, src_w: int, src_h: int,
     dx = dst_w - src_w if xs and min(xs) > (src_w - 1) - max(xs) else 0
     dy = dst_h - src_h if ys and min(ys) > (src_h - 1) - max(ys) else 0
 
-    def fit(p: Point) -> Optional[Point]:
+    def fit(p: Point) -> Point | None:
         q = Point(p.x + dx, p.y + dy)
         return q if (0 <= q.x < dst_w and 0 <= q.y < dst_h) else None
 
@@ -259,7 +258,7 @@ class Game:
         self.move_number: int = 0
         # The current node's move point (for last-move display) and whether that
         # move was skipped as illegal (for the red "illegal move" marker).
-        self.last_move_point: Optional[Point] = None
+        self.last_move_point: Point | None = None
         self.last_move_illegal: bool = False
         # Setup stones at the *current* node that the legality sweep removed
         # (zero-liberty) and the move did not re-occupy, mapped to their nominal
@@ -271,8 +270,8 @@ class Game:
     # -- construction ------------------------------------------------------
 
     @classmethod
-    def new(cls, width: int = 19, height: Optional[int] = None,
-            application: str = APPLICATION) -> "Game":
+    def new(cls, width: int = 19, height: int | None = None,
+            application: str = APPLICATION) -> Game:
         """Create a fresh, empty game with a populated root node."""
         if height is None:
             height = width
@@ -288,7 +287,7 @@ class Game:
 
     def path_to_root(self, node: SgfNode) -> list[SgfNode]:
         chain: list[SgfNode] = []
-        n: Optional[SgfNode] = node
+        n: SgfNode | None = node
         while n is not None:
             chain.append(n)
             n = n.parent
@@ -319,7 +318,7 @@ class Game:
                 and not root.has(M.BLACK_MOVE) and not root.has(M.WHITE_MOVE)):
             to_move = WHITE
 
-        res: Optional[NodeApplication] = None
+        res: NodeApplication | None = None
         for node in path:
             res = self._apply_node(
                 node, board, to_move, track_ghosts=(node is self.current))
@@ -361,7 +360,7 @@ class Game:
             n.parent.remembered_child = n
             n = n.parent
 
-    def preferred_child(self, node: SgfNode) -> Optional[SgfNode]:
+    def preferred_child(self, node: SgfNode) -> SgfNode | None:
         """The remembered (or first) child of ``node``, or ``None`` if a leaf.
 
         A remembered child that is no longer a child of this node (deleted, or
@@ -418,7 +417,7 @@ class Game:
     def has_prev(self) -> bool:
         return self.current.parent is not None
 
-    def sibling_index(self, node: Optional[SgfNode] = None) -> int:
+    def sibling_index(self, node: SgfNode | None = None) -> int:
         node = node or self.current
         if node.parent is None:
             return 0
@@ -429,11 +428,11 @@ class Game:
     def _color_name(self, color: int) -> str:
         return M.BLACK_MOVE if color == BLACK else M.WHITE_MOVE
 
-    def _move_point(self, value: str) -> Optional[Point]:
+    def _move_point(self, value: str) -> Point | None:
         """Tolerantly decode a B/W move value; a malformed value reads as a pass."""
         return move_point_of(value, self.width, self.height)
 
-    def find_child_move(self, point: Optional[Point], color: int) -> Optional[SgfNode]:
+    def find_child_move(self, point: Point | None, color: int) -> SgfNode | None:
         """Return the child node recording exactly this move, if one exists."""
         prop = self._color_name(color)
         for child in self.current.children:
@@ -442,7 +441,7 @@ class Game:
                 return child
         return None
 
-    def play(self, point: Optional[Point], color: Optional[int] = None, *,
+    def play(self, point: Point | None, color: int | None = None, *,
              forbid_multi_suicide: bool = False,
              forbid_ko: bool = False) -> SgfNode:
         """Play a move at ``point`` (``None`` = pass) for ``color`` (default: side to move).
@@ -494,7 +493,7 @@ class Game:
         self.goto(node)
         return node
 
-    def pass_move(self, color: Optional[int] = None) -> SgfNode:
+    def pass_move(self, color: int | None = None) -> SgfNode:
         return self.play(None, color)
 
     # -- setup editing -----------------------------------------------------
@@ -596,7 +595,7 @@ class Game:
 
     def set_setup_point(self, point: Point, color: int, *,
                         force_redundant: bool = False,
-                        resolve_captures: Optional[bool] = None) -> None:
+                        resolve_captures: bool | None = None) -> None:
         """Record a single setup edit at ``point`` to ``color`` (BLACK/WHITE/EMPTY).
 
         The point is placed in exactly one of AB/AW/AE (or none). With
@@ -642,7 +641,7 @@ class Game:
         self._set_pointlist(node, M.ADD_WHITE, sorted(aw))
         self._set_pointlist(node, M.ADD_EMPTY, sorted(ae))
 
-    def get_setup_points(self, node: Optional[SgfNode] = None) -> dict[Point, int]:
+    def get_setup_points(self, node: SgfNode | None = None) -> dict[Point, int]:
         """Map every point with an AB/AW/AE specifier on ``node`` to its colour.
 
         Includes redundant (forced) specifiers, so the GUI can halo all of them.
@@ -685,7 +684,7 @@ class Game:
                         self._set_pointlist(node, other, sorted(others))
         self._set_pointlist(node, prop, sorted(existing))
 
-    def get_marks(self, node: Optional[SgfNode] = None) -> dict[Point, str]:
+    def get_marks(self, node: SgfNode | None = None) -> dict[Point, str]:
         node = node or self.current
         marks: dict[Point, str] = {}
         for prop in M.MARK_PROPS:
@@ -703,7 +702,7 @@ class Game:
             labels.pop(point, None)
         self._write_labels(node, labels)
 
-    def get_labels(self, node: Optional[SgfNode] = None) -> dict[Point, str]:
+    def get_labels(self, node: SgfNode | None = None) -> dict[Point, str]:
         node = node or self.current
         result: dict[Point, str] = {}
         for value in node.get(M.LABEL_PROP):
@@ -739,7 +738,7 @@ class Game:
                 pts.discard(point)
                 self._set_pointlist(node, prop, sorted(pts))
 
-    def _set_label_on(self, node: SgfNode, point: Point, text: Optional[str]) -> None:
+    def _set_label_on(self, node: SgfNode, point: Point, text: str | None) -> None:
         labels = self.get_labels(node)
         if text:
             labels[point] = text
@@ -760,7 +759,7 @@ class Game:
         else:
             self.root.remove(prop)
 
-    def get_komi(self) -> Optional[float]:
+    def get_komi(self) -> float | None:
         """Parse the root ``KM`` value as a float (``None`` if absent/unparseable).
 
         Tolerates the Chinese unit suffixes 子/目 sometimes seen in komi values.
@@ -774,7 +773,7 @@ class Game:
         except ValueError:
             return None
 
-    def set_komi(self, value: Optional[float]) -> None:
+    def set_komi(self, value: float | None) -> None:
         """Set or clear the root ``KM`` value, formatted without trailing zeros.
 
         Four decimals, not two: quarter- and eighth-point komi exist, and
@@ -905,7 +904,7 @@ class Game:
 
     # -- comments / player-to-move ----------------------------------------
 
-    def get_comment(self, node: Optional[SgfNode] = None) -> str:
+    def get_comment(self, node: SgfNode | None = None) -> str:
         node = node or self.current
         return node.get_one(M.COMMENT) or ""
 
@@ -915,7 +914,7 @@ class Game:
         else:
             self.current.remove(M.COMMENT)
 
-    def set_player_to_move(self, color: Optional[int]) -> None:
+    def set_player_to_move(self, color: int | None) -> None:
         """Set or clear the PL property on the current node."""
         if color is None:
             self.current.remove(M.PLAYER)
@@ -925,7 +924,7 @@ class Game:
 
     # -- tree edits --------------------------------------------------------
 
-    def delete_node(self, node: Optional[SgfNode] = None) -> None:
+    def delete_node(self, node: SgfNode | None = None) -> None:
         """Delete ``node`` and its subtree. The root cannot be deleted."""
         node = node or self.current
         if node.parent is None:

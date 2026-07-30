@@ -72,7 +72,7 @@ class Prefs:
                 for version, names in cls._RESET_AT.items() if version > stored
                 for name in names}
 
-    def load(self) -> "Prefs":
+    def load(self) -> Prefs:
         s = QSettings(ORG, APP)
         outdated = self._outdated(s)
         for f in self.__dataclass_fields__.values():

@@ -21,7 +21,7 @@ more than one child.
 
 from __future__ import annotations
 
-from typing import Iterator, Optional
+from collections.abc import Iterator
 
 
 class SgfParseError(ValueError):
@@ -38,16 +38,16 @@ class SgfNode:
 
     __slots__ = ("props", "children", "parent", "remembered_child")
 
-    def __init__(self, parent: Optional["SgfNode"] = None):
+    def __init__(self, parent: SgfNode | None = None):
         self.props: dict[str, list[str]] = {}
         self.children: list[SgfNode] = []
-        self.parent: Optional[SgfNode] = parent
+        self.parent: SgfNode | None = parent
         # Navigation state, not SGF content (never serialized): the child the
         # user last continued into from here, so pressing "forward" returns to
         # the variation they were exploring instead of always taking the first.
         # Held as a node, not an index, so it survives the variation being
         # reordered — and it dies with the node, unlike a map keyed by id().
-        self.remembered_child: Optional[SgfNode] = None
+        self.remembered_child: SgfNode | None = None
 
     # -- property access ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class SgfNode:
         """Return the list of values for ``ident`` (empty list if absent)."""
         return self.props.get(ident, [])
 
-    def get_one(self, ident: str) -> Optional[str]:
+    def get_one(self, ident: str) -> str | None:
         """Return the first value for ``ident``, or ``None`` if absent/empty."""
         vals = self.props.get(ident)
         if not vals:
@@ -88,7 +88,7 @@ class SgfNode:
 
     # -- tree structure ----------------------------------------------------
 
-    def add_child(self, child: Optional["SgfNode"] = None, index: Optional[int] = None) -> "SgfNode":
+    def add_child(self, child: SgfNode | None = None, index: int | None = None) -> SgfNode:
         """Create (or attach) a child node and return it."""
         if child is None:
             child = SgfNode(parent=self)
@@ -106,14 +106,14 @@ class SgfNode:
             self.parent.children.remove(self)
             self.parent = None
 
-    def clone(self, parent: Optional["SgfNode"] = None) -> "SgfNode":
+    def clone(self, parent: SgfNode | None = None) -> SgfNode:
         """Return a deep copy of this node and its whole subtree.
 
         Iterative (like :meth:`walk`): a long game record easily exceeds the
         recursion limit, and clone is reachable from the UI (subtree copy,
         cross-tab paste).
         """
-        def shallow(src: "SgfNode", par: Optional["SgfNode"]) -> "SgfNode":
+        def shallow(src: SgfNode, par: SgfNode | None) -> SgfNode:
             node = SgfNode(par)
             node.props = {ident: list(values) for ident, values in src.props.items()}
             return node
@@ -128,7 +128,7 @@ class SgfNode:
                 stack.append((child, copy))
         return root
 
-    def walk(self) -> Iterator["SgfNode"]:
+    def walk(self) -> Iterator[SgfNode]:
         """Yield this node and all descendants in depth-first order."""
         stack = [self]
         while stack:
@@ -136,9 +136,9 @@ class SgfNode:
             yield node
             stack.extend(reversed(node.children))
 
-    def main_line(self) -> Iterator["SgfNode"]:
+    def main_line(self) -> Iterator[SgfNode]:
         """Yield this node then repeatedly its first child (the main variation)."""
-        node: Optional[SgfNode] = self
+        node: SgfNode | None = self
         while node is not None:
             yield node
             node = node.children[0] if node.children else None
@@ -219,7 +219,7 @@ class _Parser:
             raise SgfParseError("no game tree found in input")
         return roots
 
-    def parse_gametree(self, parent: Optional[SgfNode]) -> SgfNode:
+    def parse_gametree(self, parent: SgfNode | None) -> SgfNode:
         """Parse one (arbitrarily nested) game tree, returning its first node.
 
         Iterative — variation nesting can track path depth in a dense tree, so
@@ -229,7 +229,7 @@ class _Parser:
         both further nodes and child variations hang off).
         """
         assert self.s[self.i] == "("
-        result: Optional[SgfNode] = None
+        result: SgfNode | None = None
         frames: list[list] = []
         while True:
             self.skip_ws()
@@ -275,7 +275,7 @@ class _Parser:
                 break
         return result
 
-    def parse_node(self, parent: Optional[SgfNode]) -> SgfNode:
+    def parse_node(self, parent: SgfNode | None) -> SgfNode:
         assert self.s[self.i] == ";"
         self.i += 1  # consume ';'
         node = SgfNode(parent=parent)
@@ -373,7 +373,7 @@ def _serialize_tree(node: SgfNode, out: list[str]) -> None:
     # Iterative: branch nesting can track path depth in a dense tree, and this
     # runs on every edit (undo snapshots), so it must not hit the recursion
     # limit. A ``None`` on the stack closes the currently open game tree.
-    stack: list[Optional[SgfNode]] = [node]
+    stack: list[SgfNode | None] = [node]
     while stack:
         item = stack.pop()
         if item is None:

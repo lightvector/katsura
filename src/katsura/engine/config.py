@@ -26,7 +26,7 @@ class EngineConfig:
         return {"name": self.name, "command": self.command}
 
     @classmethod
-    def from_dict(cls, d: dict) -> "EngineConfig":
+    def from_dict(cls, d: dict) -> EngineConfig:
         return cls(name=str(d.get("name", "")), command=str(d.get("command", "")))
 
 

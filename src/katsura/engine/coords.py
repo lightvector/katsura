@@ -9,7 +9,6 @@ widget draws for its coordinate labels.
 
 from __future__ import annotations
 
-from typing import Optional
 
 from ..sgf.coords import Point
 
@@ -34,7 +33,7 @@ def point_label(p: Point, height: int) -> str:
     return f"{column_label(p.x)}{height - p.y}"
 
 
-def point_to_vertex(p: Optional[Point], height: int) -> str:
+def point_to_vertex(p: Point | None, height: int) -> str:
     """Encode a :class:`Point` (or ``None`` = pass) as a GTP vertex string."""
     if p is None:
         return "pass"
@@ -43,7 +42,7 @@ def point_to_vertex(p: Optional[Point], height: int) -> str:
     return f"{COL_LETTERS[p.x]}{height - p.y}"
 
 
-def vertex_to_point(vertex: str, height: int) -> Optional[Point]:
+def vertex_to_point(vertex: str, height: int) -> Point | None:
     """Decode a GTP vertex string. ``pass``/``resign`` (any case) return ``None``."""
     v = vertex.strip().upper()
     if v in ("PASS", "RESIGN", ""):

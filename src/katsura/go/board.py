@@ -16,7 +16,7 @@ caller decides what to do (reject the click, or skip the move during replay).
 
 from __future__ import annotations
 
-from typing import Iterable, Optional
+from collections.abc import Iterable
 
 from ..sgf.coords import Point
 
@@ -65,7 +65,7 @@ class Board:
 
     __slots__ = ("width", "height", "_grid")
 
-    def __init__(self, width: int = 19, height: Optional[int] = None):
+    def __init__(self, width: int = 19, height: int | None = None):
         if height is None:
             height = width
         if not (1 <= width <= MAX_BOARD_SIZE and 1 <= height <= MAX_BOARD_SIZE):
@@ -77,7 +77,7 @@ class Board:
 
     # -- basic access ------------------------------------------------------
 
-    def copy(self) -> "Board":
+    def copy(self) -> Board:
         b = Board.__new__(Board)
         b.width = self.width
         b.height = self.height
@@ -174,7 +174,7 @@ class Board:
             self._remove_indices(captured)
         return captured
 
-    def play_classified(self, color: Color, p: Optional[Point]) -> tuple[str, list[Point]]:
+    def play_classified(self, color: Color, p: Point | None) -> tuple[str, list[Point]]:
         """Classify and (if legal) apply a move under the single legality predicate.
 
         Returns ``(status, captured_points)`` where ``status`` is one of the
@@ -210,7 +210,7 @@ class Board:
         self._grid = trial._grid
         return MOVE_OK, [Point(i % w, i // w) for i in cap]
 
-    def play(self, color: Color, p: Optional[Point]) -> list[Point]:
+    def play(self, color: Color, p: Point | None) -> list[Point]:
         """Apply a move, raising :class:`IllegalMove` if it is illegal.
 
         Thin wrapper over :meth:`play_classified` for callers/tests that prefer

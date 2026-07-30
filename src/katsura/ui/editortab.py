@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from typing import Optional
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont, QColor
@@ -47,7 +46,7 @@ _SHIFTED_DIGIT_KEYS = {
 }
 
 
-def _digit_of(key, shifted: bool = False) -> Optional[int]:
+def _digit_of(key, shifted: bool = False) -> int | None:
     """The digit ``key`` stands for (0-9), or ``None`` if it isn't one.
 
     The shifted-character spellings are consulted only when Shift is actually
@@ -87,12 +86,12 @@ class EditorTab(QWidget):
         # from the SGF on load and then edited independently from the toolbar.
         self.analysis_settings = initial_settings(self.game)
         self._loading = False
-        self._comment_before: Optional[str] = None
+        self._comment_before: str | None = None
         self._comment_snap = None      # pending undo snapshot of a comment session
         self._edit_snap = None         # pending undo snapshot of a speculative edit
         # Transient (not persisted to SGF) override of who plays the next move,
         # set by Ctrl+Click in Play mode. Cleared on any navigation.
-        self.transient_color: Optional[int] = None
+        self.transient_color: int | None = None
         # The subtree mark and the selection buffer live on the window so they
         # are shared across tabs (cross-SGF cut/copy/paste). Selection itself is
         # per-tab.
@@ -493,7 +492,7 @@ class EditorTab(QWidget):
     def _click_play_stone(self, pt: Point, shift: bool) -> None:
         self._do_play(pt, WHITE if shift else BLACK)
 
-    def _do_play(self, pt: Optional[Point], color: int) -> None:
+    def _do_play(self, pt: Point | None, color: int) -> None:
         g = self.game
         existing = g.find_child_move(pt, color)
         if existing is not None:

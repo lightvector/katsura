@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
 
 from PySide6.QtCore import Qt, QEvent, QSettings
 from PySide6.QtGui import QAction, QActionGroup, QKeySequence
@@ -77,7 +76,7 @@ def hint_key(action: QAction, *keys) -> QAction:
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, prefs: Optional[Prefs] = None, initial_tab: bool = True):
+    def __init__(self, prefs: Prefs | None = None, initial_tab: bool = True):
         super().__init__()
         self.prefs = prefs or Prefs().load()
         self.mode = EditMode.PLAY
@@ -102,12 +101,12 @@ class MainWindow(QMainWindow):
         # and drives the panel/board overlays; the others are held paused.
         self.engines: list[EngineConfig] = load_engines()
         self.engine_controllers: list[AnalysisController] = []
-        self._current_engine: Optional[AnalysisController] = None
-        self.gtp_console: Optional[GtpConsole] = None
+        self._current_engine: AnalysisController | None = None
+        self.gtp_console: GtpConsole | None = None
         # When an engine dies, the console pops showing the dead engine's
         # transcript under a pseudo-entry "<name> (stopped)" until the user
         # picks a live engine (or reopens/closes the console).
-        self._console_dead: Optional[str] = None
+        self._console_dead: str | None = None
 
         self._build_actions()
         self._build_menus()
@@ -123,7 +122,7 @@ class MainWindow(QMainWindow):
 
     # -- tab access --------------------------------------------------------
 
-    def current_tab(self) -> Optional[EditorTab]:
+    def current_tab(self) -> EditorTab | None:
         w = self.tabs.currentWidget()
         return w if isinstance(w, EditorTab) else None
 
@@ -153,7 +152,7 @@ class MainWindow(QMainWindow):
     # -- engine access -----------------------------------------------------
 
     @property
-    def engine_controller(self) -> Optional[AnalysisController]:
+    def engine_controller(self) -> AnalysisController | None:
         """The controller of the *shown* engine (None when nothing is attached)."""
         return self._current_engine
 
@@ -708,7 +707,7 @@ class MainWindow(QMainWindow):
                 ctrl.display_name,
                 lambda _=False, c=ctrl: self.detach_engine(c))
 
-    def _controller_for(self, config: EngineConfig) -> Optional[AnalysisController]:
+    def _controller_for(self, config: EngineConfig) -> AnalysisController | None:
         return next((c for c in self.engine_controllers if c.config == config),
                     None)
 
@@ -758,7 +757,7 @@ class MainWindow(QMainWindow):
         if not self.engine_controllers and self.gtp_console is not None:
             self.gtp_console.close()
 
-    def select_engine(self, ctrl: Optional[AnalysisController]) -> None:
+    def select_engine(self, ctrl: AnalysisController | None) -> None:
         """Make ``ctrl`` the shown engine: its analysis drives the panel, the
         board overlays, and the console. Every other attached engine is held
         open but never analysing (switching away auto-halts its search)."""

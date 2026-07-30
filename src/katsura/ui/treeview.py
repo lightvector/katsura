@@ -19,7 +19,6 @@ never throws you far forward/back).
 
 from __future__ import annotations
 
-from typing import Optional
 
 from PySide6.QtCore import Qt, Signal, QPointF, QRectF, QSize
 from PySide6.QtGui import QPainter, QColor, QPen, QBrush, QFont, QRadialGradient
@@ -56,10 +55,10 @@ class _TreeCanvas(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.game: Optional[Game] = None
+        self.game: Game | None = None
         self.centered = False
         self.marked_ids: set[int] = set()        # subtree marked for cut/copy
-        self.marked_color: Optional[QColor] = None
+        self.marked_color: QColor | None = None
         self._pos: dict[int, tuple[int, int]] = {}   # id(node) -> (col, row) for *display*
         self._nodes: dict[int, SgfNode] = {}
         self._movenum: dict[int, int] = {}           # id(node) -> move number (0 if not a move)
@@ -72,7 +71,7 @@ class _TreeCanvas(QWidget):
         # Cached golden-line membership for the *display*, invalidated when the
         # current node or the layout changes, so paint need not rebuild it.
         self._remembered: set[int] = set()
-        self._remembered_id: Optional[int] = None
+        self._remembered_id: int | None = None
         # Signature of the golden line the centred layout was built for, so we can
         # skip a relayout when navigation stays on the same line.
         self._layout_golden_sig: tuple[int, ...] = ()
@@ -88,7 +87,7 @@ class _TreeCanvas(QWidget):
         self.setFocusPolicy(Qt.StrongFocus)
         self.setMouseTracking(True)
 
-    def set_game(self, game: Optional[Game]) -> None:
+    def set_game(self, game: Game | None) -> None:
         self.game = game
         self._relayout()
         self.update()
@@ -98,7 +97,7 @@ class _TreeCanvas(QWidget):
         self._relayout()
         self.update()
 
-    def set_marked(self, ids: set[int], color: Optional[QColor]) -> None:
+    def set_marked(self, ids: set[int], color: QColor | None) -> None:
         self.marked_ids = ids
         self.marked_color = color
         self.update()
@@ -108,7 +107,7 @@ class _TreeCanvas(QWidget):
     def _golden_nodes(self) -> list[SgfNode]:
         g = self.game
         spine: list[SgfNode] = []
-        n: Optional[SgfNode] = g.current
+        n: SgfNode | None = g.current
         ancestors = []
         while n is not None:
             ancestors.append(n)
@@ -188,7 +187,7 @@ class _TreeCanvas(QWidget):
 
     def _principal_path(self) -> list[SgfNode]:
         path: list[SgfNode] = []
-        n: Optional[SgfNode] = self.game.root
+        n: SgfNode | None = self.game.root
         while n is not None:
             path.append(n)
             n = n.children[0] if n.children else None
@@ -342,7 +341,7 @@ class _TreeCanvas(QWidget):
         y1 = top + (max_r + self._row_offset + 1) * CELL
         return QRectF(x0 - 2, y0 - 2, (x1 - x0) + 4, (y1 - y0) + 4)
 
-    def current_center(self) -> Optional[QPointF]:
+    def current_center(self) -> QPointF | None:
         if self.game is None:
             return None
         cr = self._pos.get(id(self.game.current))
@@ -512,7 +511,7 @@ class _TreeCanvas(QWidget):
 
     # -- input -------------------------------------------------------------
 
-    def _node_at(self, x: float, y: float) -> Optional[SgfNode]:
+    def _node_at(self, x: float, y: float) -> SgfNode | None:
         # The hit radius (RADIUS + 4 = CELL/2) fits inside a single cell, so a
         # click can only land on the nearest cell's node — round to it and check
         # just that one, instead of scanning every node.
@@ -526,7 +525,7 @@ class _TreeCanvas(QWidget):
             return node
         return None
 
-    def vertical_neighbor(self, direction: int) -> Optional[SgfNode]:
+    def vertical_neighbor(self, direction: int) -> SgfNode | None:
         """Node at the SAME depth in the nearest line above/below.
 
         Uses the stable navigation layout (not the possibly-centred display
@@ -582,7 +581,7 @@ class VariationTree(QScrollArea):
             f"QScrollArea > QWidget > QWidget {{ background: {BACKDROP.name()}; }}")
         self.viewport().setStyleSheet(f"background: {BACKDROP.name()};")
 
-    def set_game(self, game: Optional[Game]) -> None:
+    def set_game(self, game: Game | None) -> None:
         self.canvas.set_game(game)
         self.scroll_to_current()
 
@@ -597,7 +596,7 @@ class VariationTree(QScrollArea):
         self.canvas.set_game(self.canvas.game)
         self.scroll_to_current()
 
-    def vertical_neighbor(self, direction: int) -> Optional[SgfNode]:
+    def vertical_neighbor(self, direction: int) -> SgfNode | None:
         return self.canvas.vertical_neighbor(direction)
 
     def resizeEvent(self, event) -> None:

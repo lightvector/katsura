@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import Optional
 
 from ..model.game import Game
 from ..sgf.tree import SgfNode, parse_collection, serialize_collection
@@ -56,7 +55,7 @@ class _Snapshot:
     # Cursor for the *other* end of this edit (see the module docstring). None
     # on entries recorded by push_undo(), where the post-edit position is not
     # known yet; undo then falls back to the live cursor.
-    counter_path: Optional[list[int]] = None
+    counter_path: list[int] | None = None
 
 
 _untitled_counter = 0
@@ -75,22 +74,22 @@ class Document:
     roots: list[SgfNode]
     game: Game
     active_index: int = 0
-    path: Optional[str] = None
+    path: str | None = None
     dirty: bool = False
     _undo: list[_Snapshot] = field(default_factory=list)
     _redo: list[_Snapshot] = field(default_factory=list)
-    untitled_name: Optional[str] = None
+    untitled_name: str | None = None
 
     # -- construction ------------------------------------------------------
 
     @classmethod
-    def new(cls, width: int = 19, height: Optional[int] = None) -> "Document":
+    def new(cls, width: int = 19, height: int | None = None) -> Document:
         game = Game.new(width, height)
         return cls(roots=[game.root], game=game,
                    untitled_name=_next_untitled_name())
 
     @classmethod
-    def open(cls, path: str) -> "Document":
+    def open(cls, path: str) -> Document:
         with open(path, "rb") as fh:
             raw = fh.read()
         text = _decode_bytes(raw)
@@ -99,7 +98,7 @@ class Document:
         return cls(roots=roots, game=game, path=path)
 
     @classmethod
-    def open_sgfs(cls, path: str) -> tuple[list["Document"], int]:
+    def open_sgfs(cls, path: str) -> tuple[list[Document], int]:
         """Load a KataGo-style ``.sgfs`` file: one newline-free SGF per line.
 
         Returns ``(documents, failed)`` where ``failed`` counts non-blank
@@ -141,7 +140,7 @@ class Document:
     def to_sgf(self) -> str:
         return serialize_collection(self.roots)
 
-    def save(self, path: Optional[str] = None) -> None:
+    def save(self, path: str | None = None) -> None:
         target = path or self.path
         if target is None:
             raise ValueError("no path to save to")

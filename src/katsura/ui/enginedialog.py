@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 from PySide6.QtCore import Qt, QSettings
 from PySide6.QtWidgets import (
@@ -28,7 +27,7 @@ from .settings import ORG, APP
 class EngineEditDialog(QDialog):
     """Edit a single engine's name and shell command."""
 
-    def __init__(self, parent=None, config: Optional[EngineConfig] = None):
+    def __init__(self, parent=None, config: EngineConfig | None = None):
         super().__init__(parent)
         self.setWindowTitle("Engine")
         self.resize(560, 260)
@@ -175,7 +174,7 @@ class EngineManagerDialog(QDialog):
         if not path:
             return
         try:
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 data = json.load(f)
         except (OSError, ValueError) as e:
             QMessageBox.critical(self, "Import failed", f"Could not read file:\n{e}")

@@ -25,7 +25,6 @@ displayed position and for throwaway queries like :meth:`Game.board_at`.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 from ..go.board import Board, BLACK, WHITE, EMPTY, ILLEGAL_STATUSES, opponent
 from ..sgf.coords import Point, SgfCoordError, parse_point_list, sgf_to_move
@@ -33,7 +32,7 @@ from ..sgf.tree import SgfNode
 from . import markup as M
 
 
-def color_from_pl(value: str) -> Optional[int]:
+def color_from_pl(value: str) -> int | None:
     """The colour an SGF ``PL`` value names (``B``/``1``, ``W``/``2``), else None."""
     v = value.strip().upper()
     if v in ("B", "1"):
@@ -49,9 +48,9 @@ class NodeApplication:
 
     to_move: int                       # side to play *after* this node (PL applied)
     has_setup: bool                    # the node carried AB/AW/AE
-    move_color: Optional[int] = None   # None when the node records no move
-    move_point: Optional[Point] = None  # None = pass (or a malformed value)
-    move_status: Optional[str] = None  # Board.play_classified status, if a move
+    move_color: int | None = None   # None when the node records no move
+    move_point: Point | None = None  # None = pass (or a malformed value)
+    move_status: str | None = None  # Board.play_classified status, if a move
     # Setup stones the sweep removed that the move did not re-occupy, mapped to
     # the colour they were specified as. Only populated under ``track_ghosts``.
     ghosts: dict = field(default_factory=dict)
@@ -66,7 +65,7 @@ class NodeApplication:
         return self.move_status in ILLEGAL_STATUSES
 
 
-def move_point_of(value: str, width: int, height: int) -> Optional[Point]:
+def move_point_of(value: str, width: int, height: int) -> Point | None:
     """Tolerantly decode a ``B``/``W`` value; garbage reads as a pass.
 
     Externally-authored SGF carries malformed coordinates, and replay must not
@@ -107,9 +106,9 @@ def apply_node(node: SgfNode, board: Board, to_move: int,
 
     # 3. The move, under the single legality predicate. Illegal moves are
     #    skipped (board untouched) but still flip whose turn it is.
-    move_color: Optional[int] = None
-    move_point: Optional[Point] = None
-    move_status: Optional[str] = None
+    move_color: int | None = None
+    move_point: Point | None = None
+    move_status: str | None = None
     for prop, color in ((M.BLACK_MOVE, BLACK), (M.WHITE_MOVE, WHITE)):
         mv = node.get_one(prop)
         if mv is None:

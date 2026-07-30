@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Optional
 
 from ..sgf.coords import Point
 from .coords import vertex_to_point
@@ -41,12 +40,12 @@ _LIST_STOP = _TOP_LEVEL | _INFO_SCALARS | _INFO_LISTS
 class PanelStats:
     """Black-perspective stats for the Analysis Info pane (any field optional)."""
 
-    winrate_black: Optional[float] = None
-    lead_black: Optional[float] = None
-    visits: Optional[int] = None
-    score_stdev: Optional[float] = None
-    policy_kl: Optional[float] = None
-    no_result: Optional[float] = None
+    winrate_black: float | None = None
+    lead_black: float | None = None
+    visits: int | None = None
+    score_stdev: float | None = None
+    policy_kl: float | None = None
+    no_result: float | None = None
 
 
 @dataclass
@@ -54,7 +53,7 @@ class MoveInfo:
     """Analysis for a single candidate move."""
 
     move: str                      # GTP vertex, or "pass"
-    point: Optional[Point]         # board point (None for pass)
+    point: Point | None         # board point (None for pass)
     visits: int
     winrate: float                 # [0, 1], from the side-to-move's perspective
     # How far ahead the side to move is *relative to an even game*, in points —
@@ -70,9 +69,9 @@ class MoveInfo:
     # score_stdev is the standard deviation of. Defaults to score_lead when an
     # engine omits it, so the readout always has something to show.
     score_selfplay: float = 0.0
-    no_result_value: Optional[float] = None  # P(no-result), if requested
+    no_result_value: float | None = None  # P(no-result), if requested
     pv: list[str] = field(default_factory=list)        # GTP vertices
-    pv_points: list[Optional[Point]] = field(default_factory=list)
+    pv_points: list[Point | None] = field(default_factory=list)
     raw: dict = field(default_factory=dict)
 
     @property
@@ -92,7 +91,7 @@ class Analysis:
 
     moves: list[MoveInfo] = field(default_factory=list)
     root: dict = field(default_factory=dict)           # parsed rootInfo (floats)
-    ownership: Optional[list[float]] = None            # row-major from top-left
+    ownership: list[float] | None = None            # row-major from top-left
     width: int = 19
     height: int = 19
 
@@ -103,11 +102,11 @@ class Analysis:
         return sum(m.visits for m in self.moves)
 
     @property
-    def best(self) -> Optional[MoveInfo]:
+    def best(self) -> MoveInfo | None:
         return self.moves[0] if self.moves else None
 
     @property
-    def root_winrate(self) -> Optional[float]:
+    def root_winrate(self) -> float | None:
         """Root winrate (side-to-move perspective) from ``rootInfo``.
 
         Falls back to the best move's winrate when an engine omits rootInfo.
@@ -117,7 +116,7 @@ class Analysis:
         return self.best.winrate if self.best else None
 
     @property
-    def root_score_lead(self) -> Optional[float]:
+    def root_score_lead(self) -> float | None:
         """Root lead in points (side-to-move perspective) from ``rootInfo``.
 
         A lead relative to an even game, not a predicted final score — see
@@ -129,18 +128,18 @@ class Analysis:
         return self.best.score_lead if self.best else None
 
     @property
-    def root_score_stdev(self) -> Optional[float]:
+    def root_score_stdev(self) -> float | None:
         """Root score stdev from ``rootInfo`` (falls back to the best move)."""
         if "scoreStdev" in self.root:
             return self.root["scoreStdev"]
         return self.best.score_stdev if self.best else None
 
     @property
-    def root_no_result(self) -> Optional[float]:
+    def root_no_result(self) -> float | None:
         """Best move's no-result probability (rootInfo has none), if available."""
         return self.best.no_result_value if self.best else None
 
-    def policy_kl(self) -> Optional[float]:
+    def policy_kl(self) -> float | None:
         """KL divergence of the search's edge-weight distribution from the policy.
 
         ``KL(W || P) = sum_m W(m) * (log W(m) - log P(m))`` over searched moves,
@@ -217,7 +216,7 @@ def parse_analysis_line(line: str, width: int, height: int) -> Analysis:
     i = 0
     moves: list[MoveInfo] = []
     root: dict = {}
-    ownership: Optional[list[float]] = None
+    ownership: list[float] | None = None
 
     while i < n:
         tok = toks[i]
@@ -289,7 +288,7 @@ class RawNN:
     scalars: dict = field(default_factory=dict)        # raw key -> float
     policy: list[float] = field(default_factory=list)  # W*H, NaN for illegal
     policy_pass: float = 0.0
-    ownership: Optional[list[float]] = None             # W*H, white's perspective
+    ownership: list[float] | None = None             # W*H, white's perspective
 
     def _s(self, key: str, default: float = 0.0) -> float:
         v = self.scalars.get(key)

@@ -20,7 +20,6 @@ import json
 import math
 import re
 from dataclasses import dataclass, field, replace
-from typing import Optional
 
 KO_RULES = ("SIMPLE", "POSITIONAL", "SITUATIONAL")
 SCORING_RULES = ("AREA", "TERRITORY")
@@ -52,7 +51,7 @@ class KataRules:
     white_handicap_bonus: str = "0"  # "0" | "N-1" | "N" bonus points in handicap games
     friendly_pass_ok: bool = True   # False: capture all dead stones before passing
 
-    def normalized(self) -> "KataRules":
+    def normalized(self) -> KataRules:
         """Button only has meaning under area scoring; drop it otherwise."""
         if self.scoring != "AREA" and self.has_button:
             return replace(self, has_button=False)
@@ -107,7 +106,7 @@ PRESET_BUTTONS = (
 )
 
 
-def preset_name(rules: KataRules) -> Optional[str]:
+def preset_name(rules: KataRules) -> str | None:
     """The shorthand name of ``rules`` if it matches a known ruleset, else ``None``.
 
     Several names can describe the same ruleset (korean == japanese,
@@ -120,7 +119,7 @@ def preset_name(rules: KataRules) -> Optional[str]:
     return None
 
 
-def ruleset(name: str) -> Optional[KataRules]:
+def ruleset(name: str) -> KataRules | None:
     """Look a ruleset up by shorthand name; ``None`` if unknown."""
     return PRESETS.get(name)
 
@@ -196,7 +195,7 @@ def _normalize_ru(ru: str) -> tuple[str, list[str]]:
     return flat, flat.split()
 
 
-def sgf_rules_name(ru: str) -> Optional[str]:
+def sgf_rules_name(ru: str) -> str | None:
     """The shorthand ruleset name an SGF ``RU`` value names, or ``None``.
 
     Tolerant of case, punctuation, abbreviations and trailing junk (e.g.
@@ -222,7 +221,7 @@ def sgf_rules_name(ru: str) -> Optional[str]:
     return None
 
 
-def sgf_rules(ru: str) -> Optional[KataRules]:
+def sgf_rules(ru: str) -> KataRules | None:
     """The :class:`KataRules` an SGF ``RU`` value names, or ``None`` if unknown."""
     name = sgf_rules_name(ru)
     return ruleset(name) if name else None

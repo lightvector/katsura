@@ -18,7 +18,6 @@ work on the GUI thread.
 from __future__ import annotations
 
 import dataclasses
-from typing import Optional
 
 from PySide6.QtCore import QObject, Signal
 
@@ -42,8 +41,8 @@ class AnalysisController(QObject):
         super().__init__(window)
         self.window = window
         self.interval_cs = interval_cs
-        self.engine: Optional[GtpEngine] = None
-        self.config: Optional[EngineConfig] = None
+        self.engine: GtpEngine | None = None
+        self.config: EngineConfig | None = None
         # The engine's name, kept across detach so a death can still be
         # reported with the name of the engine that died.
         self.display_name = ""
@@ -511,7 +510,7 @@ class AnalysisController(QObject):
             self._shown_board = None
         self.analysisUpdated.emit(None)
 
-    def _panel_stats(self, analysis, candidate) -> Optional[PanelStats]:
+    def _panel_stats(self, analysis, candidate) -> PanelStats | None:
         tab = self.window.current_tab()
         if tab is None:
             return None

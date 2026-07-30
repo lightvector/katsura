@@ -40,7 +40,7 @@ class CollapsibleSection(QWidget):
         self.growable = growable
         self.content = content
         self.open_height = open_height
-        self.grip: "PaneGrip | None" = None    # set by the container for growable
+        self.grip: PaneGrip | None = None    # set by the container for growable
 
         self.header = QToolButton()
         self.header.setText(title)

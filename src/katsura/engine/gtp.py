@@ -33,7 +33,6 @@ import subprocess
 import sys
 import threading
 from collections import deque
-from typing import Optional
 
 from PySide6.QtCore import QObject, Signal
 
@@ -71,33 +70,33 @@ class GtpEngine(QObject):
         self._interval_cs = interval_cs
         self._ownership = ownership
 
-        self._proc: Optional[subprocess.Popen] = None
-        self._worker: Optional[threading.Thread] = None
-        self._stderr_thread: Optional[threading.Thread] = None
+        self._proc: subprocess.Popen | None = None
+        self._worker: threading.Thread | None = None
+        self._stderr_thread: threading.Thread | None = None
 
         self._lock = threading.Lock()       # guards the fields below + engine state
         self._write_lock = threading.Lock()  # guards writes to the subprocess stdin
         self._event = threading.Event()     # wakes the worker when work arrives
         self._stop_flag = False
 
-        self._pending: Optional[AnalysisRequest] = None
+        self._pending: AnalysisRequest | None = None
         self._analyzing = False
         self._paused = False
         self._commands: deque[str] = deque()
         # Pending kata-raw-nn: (symmetry, position request to sync to first).
-        self._raw_request: Optional[tuple] = None
+        self._raw_request: tuple | None = None
         self._raw_nn_color_ok = True        # engine accepts kata-raw-nn COLOR SYM
         self._warned: set[str] = set()      # one-shot warnings (worker thread)
 
         # Engine board state (what we have actually sent), tracked by value.
-        self._es_size: Optional[tuple] = None
-        self._es_komi: Optional[str] = None
-        self._es_rules: Optional[str] = None
-        self._es_anchor: Optional[tuple] = None
+        self._es_size: tuple | None = None
+        self._es_komi: str | None = None
+        self._es_rules: str | None = None
+        self._es_anchor: tuple | None = None
         self._es_moves: list = []
         # Engine-global search params (persist across positions; tracked by value).
-        self._es_wide_root_noise: Optional[float] = None
-        self._es_pda: Optional[float] = None
+        self._es_wide_root_noise: float | None = None
+        self._es_pda: float | None = None
 
     # -- lifecycle ---------------------------------------------------------
 
@@ -253,7 +252,7 @@ class GtpEngine(QObject):
         self._event.set()
 
     def request_raw_nn(self, symmetry: int,
-                       req: Optional[AnalysisRequest] = None) -> None:
+                       req: AnalysisRequest | None = None) -> None:
         """Queue a one-shot ``kata-raw-nn`` (newest wins; interrupts any search).
 
         ``req`` is the position the evaluation is *for*: the worker syncs to it
@@ -354,13 +353,13 @@ class GtpEngine(QObject):
         self._set_state("stopped")
         self.died.emit(reason)
 
-    def _pop_command(self) -> Optional[str]:
+    def _pop_command(self) -> str | None:
         with self._lock:
             if self._commands:
                 return self._commands.popleft()
             return None
 
-    def _pop_raw_request(self) -> Optional[tuple]:
+    def _pop_raw_request(self) -> tuple | None:
         with self._lock:
             raw = self._raw_request
             self._raw_request = None
@@ -373,7 +372,7 @@ class GtpEngine(QObject):
             self.logLine.emit(f"[Katsura] {msg}")
 
     def _raw_nn_eval(self, symmetry: int,
-                     req: Optional[AnalysisRequest]) -> tuple[bool, str]:
+                     req: AnalysisRequest | None) -> tuple[bool, str]:
         """Run ``kata-raw-nn``, naming the side to evaluate for when known.
 
         KataGo v1.17+ accepts ``kata-raw-nn COLOR SYMMETRY``; the explicit
@@ -550,7 +549,7 @@ class GtpEngine(QObject):
             pass
 
     def _read_response(self) -> tuple[bool, str]:
-        status: Optional[str] = None
+        status: str | None = None
         body: list[str] = []
         while True:
             raw = self._proc.stdout.readline()

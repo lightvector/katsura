@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-from typing import Optional
 
 from PySide6.QtCore import Qt, Signal, QRectF, QPointF
 from PySide6.QtGui import (
@@ -129,7 +128,7 @@ class BoardView(QWidget):
     def __init__(self, prefs: Prefs, parent=None):
         super().__init__(parent)
         self.prefs = prefs
-        self.game: Optional[Game] = None
+        self.game: Game | None = None
         self._analysis = None                   # latest engine Analysis (or None)
         self._raw_nn = None                     # RawNN (kata-raw-nn) or None
         self._policy_mode = False               # 'p': show policy priors, not stats
@@ -139,9 +138,9 @@ class BoardView(QWidget):
         # by the controller; no connection to the cache or the SGF model.
         self._stale_ownership = None
         self._last_readout = None               # last status-bar readout emitted
-        self._hover: Optional[Point] = None
+        self._hover: Point | None = None
         self.mode = None                        # set by the controller
-        self.transient_to_move: Optional[int] = None
+        self.transient_to_move: int | None = None
         # Selection-tool state (driven by the controller for rendering).
         self.selection: set = set()            # selected Points
         self.paste_active = False
@@ -149,11 +148,11 @@ class BoardView(QWidget):
         self.paste_dims = (0, 0)
         self.paste_center = (0, 0)
         self._painting = False
-        self._paint_last: Optional[Point] = None
+        self._paint_last: Point | None = None
         self._sel_dragging = False
         self._sel_is_move = False
-        self._sel_start: Optional[Point] = None
-        self._sel_cur: Optional[Point] = None
+        self._sel_start: Point | None = None
+        self._sel_cur: Point | None = None
         self._sel_mods = Qt.NoModifier
         self.setMinimumSize(200, 200)
         self.setFocusPolicy(Qt.StrongFocus)
@@ -177,7 +176,7 @@ class BoardView(QWidget):
         self.paste_center = center
         self.update()
 
-    def set_game(self, game: Optional[Game]) -> None:
+    def set_game(self, game: Game | None) -> None:
         self.game = game
         self._hover = None
         self.update()
@@ -260,7 +259,7 @@ class BoardView(QWidget):
         ox, oy = self._origin
         return QPointF(ox + i * self._cell, oy + j * self._cell)
 
-    def _point_at(self, px: float, py: float) -> Optional[Point]:
+    def _point_at(self, px: float, py: float) -> Point | None:
         g = self.game
         if g is None:
             return None
@@ -731,7 +730,7 @@ class BoardView(QWidget):
     def _fmt_move_readout(self, m) -> str:
         return "    ".join([f"Stats for {m.move}"] + self._move_stat_parts(m))
 
-    def _candidate_at(self, pt: Optional[Point]):
+    def _candidate_at(self, pt: Point | None):
         if pt is None or self._analysis is None:
             return None
         for m in self._analysis.moves:
