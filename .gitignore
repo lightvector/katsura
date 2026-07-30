@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual envs
+.venv/
+venv/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Project scratch
+tmp/
+*.log
+
+# App-local config written at runtime (keep out of repo)
+/.katsura_local/
+
+# Local copies of upstream protocol specs, kept beside the tree for reference
+# but not redistributed here.
+docs/katago_GTP_Extensions.md
+docs/official_GTP.html

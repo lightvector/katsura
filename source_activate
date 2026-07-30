@@ -1,0 +1,2 @@
+# run this using `source activate_venv.sh`
+export PATH="/mnt/c/Data/Data/Coding/Python/SimpleKataGui/.venv/Scripts:$PATH"

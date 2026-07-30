@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "katsura"
+version = "0.1.0"
+description = "A high-quality graphical SGF editor for the game of Go"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "0BSD"
+license-files = ["LICENSE"]
+authors = [{ name = "David Wu" }]
+keywords = ["go", "baduk", "weiqi", "sgf", "editor", "kata"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: X11 Applications :: Qt",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Topic :: Games/Entertainment :: Board Games",
+]
+dependencies = [
+    "PySide6>=6.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1",
+]
+
+[project.gui-scripts]
+katsura = "katsura.ui.app:main"
+
+[project.scripts]
+katsura-cli = "katsura.ui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests lean on `a = 1; b = 2` to keep multi-step GUI setup compact and
+# readable; that density is wanted here and nowhere else.
+"tests/*" = ["E702"]
