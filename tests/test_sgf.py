@@ -3,19 +3,18 @@
 import pytest
 
 from katsura.sgf import (
+    SgfParseError,
     parse_collection,
     serialize_collection,
-    SgfParseError,
 )
 from katsura.sgf.coords import (
     Point,
-    sgf_to_point,
-    point_to_sgf,
-    sgf_to_move,
     parse_point_list,
     point_list_to_sgf,
+    point_to_sgf,
+    sgf_to_move,
+    sgf_to_point,
 )
-
 
 # -- coordinates -----------------------------------------------------------
 

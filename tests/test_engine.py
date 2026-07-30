@@ -82,6 +82,7 @@ def test_move_info_edge_weight_and_extra_fields():
 
 def test_policy_kl_matches_definition():
     import math
+
     from katsura.engine.analysis import Analysis, MoveInfo
 
     def mv(weight, prior):
@@ -170,8 +171,7 @@ def test_build_request_incremental_keys_differ_by_position():
 
 
 def test_settings_step_helpers():
-    from katsura.engine.settings import (
-        step_wide_root_noise, step_pda, clamp_komi)
+    from katsura.engine.settings import clamp_komi, step_pda, step_wide_root_noise
     # Wide-root-noise steps through the discrete list, clamped at the ends.
     assert step_wide_root_noise(0.04, up=True) == 0.10
     assert step_wide_root_noise(0.04, up=False) == 0.01
@@ -195,8 +195,7 @@ def test_settings_step_helpers():
 
 
 def test_sgf_rules_recognition():
-    from katsura.engine.settings import (
-        PRESETS, preset_name, sgf_rules, sgf_rules_name)
+    from katsura.engine.settings import PRESETS, preset_name, sgf_rules, sgf_rules_name
 
     cases = {
         # Plain names, any case.
@@ -239,9 +238,9 @@ def test_sgf_rules_recognition():
 
 
 def test_initial_settings_from_sgf_rules_and_komi():
-    from katsura.sgf.tree import parse_collection
     from katsura.engine.position import initial_settings
     from katsura.engine.settings import DEFAULT_RULES, PRESETS
+    from katsura.sgf.tree import parse_collection
 
     def settings(props):
         return initial_settings(Game(parse_collection(f"(;GM[1]SZ[19]{props})")[0]))
@@ -268,7 +267,8 @@ def test_initial_settings_from_sgf_rules_and_komi():
 
 def test_request_key_includes_engine_settings():
     from dataclasses import replace
-    from katsura.engine.settings import AnalysisSettings, PRESETS
+
+    from katsura.engine.settings import PRESETS, AnalysisSettings
     g = Game.new(19)
     base = AnalysisSettings()
     k0 = build_request(g, 0, base).position_key
@@ -514,6 +514,7 @@ def test_engine_play_failure_falls_back_to_set_position(qapp, tmp_path):
 
 def test_board_analysis_overlay_paints(qapp):
     from PySide6.QtGui import QImage
+
     from katsura.model.game import Game
     from katsura.ui.boardview import BoardView, _scale_color
     from katsura.ui.settings import Prefs
@@ -539,8 +540,8 @@ def test_board_analysis_overlay_paints(qapp):
 
 
 def test_window_live_analysis_overlay(qapp, tmp_path):
-    from katsura.go.board import BLACK
     from katsura.engine.config import EngineConfig
+    from katsura.go.board import BLACK
     from katsura.ui.mainwindow import MainWindow
 
     log = tmp_path / "gtp.log"
@@ -570,8 +571,8 @@ def test_transient_player_flip_reanalyzes_for_other_side(qapp, tmp_path):
     """Ctrl+Click's transient player flip (no SGF change) must re-drive the
     engine to analyse the same board for the other side, and flipping back must
     restore the original side's (cached) analysis."""
-    from katsura.go.board import BLACK, WHITE
     from katsura.engine.config import EngineConfig
+    from katsura.go.board import BLACK, WHITE
     from katsura.ui.mainwindow import MainWindow
 
     log = tmp_path / "gtp.log"
@@ -607,8 +608,8 @@ def test_transient_player_flip_reanalyzes_for_other_side(qapp, tmp_path):
 
 
 def test_paused_navigation_uses_per_position_cache(qapp, tmp_path):
-    from katsura.go.board import BLACK, WHITE
     from katsura.engine.config import EngineConfig
+    from katsura.go.board import BLACK, WHITE
     from katsura.ui.mainwindow import MainWindow
 
     log = tmp_path / "gtp.log"
@@ -648,8 +649,8 @@ def test_paused_navigation_uses_per_position_cache(qapp, tmp_path):
 
 
 def test_resume_keeps_overlay_from_cache(qapp, tmp_path):
-    from katsura.go.board import BLACK
     from katsura.engine.config import EngineConfig
+    from katsura.go.board import BLACK
     from katsura.ui.mainwindow import MainWindow
 
     log = tmp_path / "gtp.log"
@@ -734,6 +735,7 @@ def test_raw_nn_color_falls_back_for_old_engines(qapp, tmp_path):
 def test_stale_died_signal_cannot_kill_new_engine(qapp, tmp_path):
     """A queued `died` from a detached engine must not tear down its successor."""
     from PySide6.QtCore import QObject
+
     from katsura.engine.config import EngineConfig
     from katsura.engine.controller import AnalysisController
 
@@ -769,6 +771,7 @@ def test_stale_died_signal_cannot_kill_new_engine(qapp, tmp_path):
 def test_no_tab_pauses_search_until_a_tab_returns(qapp, tmp_path):
     """With no tab, refresh_position halts the search; a tab resumes it."""
     from PySide6.QtCore import QObject
+
     from katsura.engine.config import EngineConfig
     from katsura.engine.controller import AnalysisController
     from katsura.engine.settings import AnalysisSettings
@@ -818,12 +821,13 @@ def test_no_tab_pauses_search_until_a_tab_returns(qapp, tmp_path):
 
 def test_stale_ownership_bridges_position_change(qapp):
     from PySide6.QtCore import QObject
-    from katsura.go.board import BLACK, WHITE
+
     from katsura.engine.controller import AnalysisController
+    from katsura.engine.settings import AnalysisSettings
+    from katsura.go.board import BLACK, WHITE
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.settings import Prefs
-    from katsura.engine.settings import AnalysisSettings
-    from katsura.model.game import Game
 
     line = ("info move D4 visits 100 winrate 0.55 scoreLead 1.5 prior 0.4 "
             "weight 90 edgeVisits 100 order 0 pv D4 "
@@ -889,10 +893,11 @@ def test_stale_ownership_bridges_position_change(qapp):
 
 def test_policy_and_ownership_paint(qapp):
     from PySide6.QtGui import QImage
+
     from katsura.engine.analysis import parse_raw_nn
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.settings import Prefs
-    from katsura.model.game import Game
 
     line = ("info move D4 visits 100 winrate 0.55 scoreLead 1.5 prior 0.4 "
             "weight 90 edgeVisits 100 order 0 pv D4 "
@@ -996,9 +1001,9 @@ def test_switching_tabs_exits_raw_nn_view(qapp, tmp_path):
 
 
 def test_board_readout_hover_and_pass(qapp):
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.settings import Prefs
-    from katsura.model.game import Game
 
     bv = BoardView(Prefs())
     bv.set_game(Game.new(19))
@@ -1035,8 +1040,8 @@ def test_board_readout_hover_and_pass(qapp):
 
 
 def test_panel_continuity_from_parent_move(qapp, tmp_path):
-    from katsura.go.board import BLACK
     from katsura.engine.config import EngineConfig
+    from katsura.go.board import BLACK
     from katsura.ui.mainwindow import MainWindow
 
     log = tmp_path / "gtp.log"

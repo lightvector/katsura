@@ -2,7 +2,7 @@
 
 import pytest
 
-from katsura.go.board import Board, BLACK, WHITE, EMPTY, IllegalMove
+from katsura.go.board import BLACK, EMPTY, WHITE, Board, IllegalMove
 from katsura.sgf.coords import Point
 
 

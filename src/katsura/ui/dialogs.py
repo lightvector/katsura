@@ -2,27 +2,32 @@
 
 from __future__ import annotations
 
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
-    QDialog,
-    QDialogButtonBox,
-    QFormLayout,
-    QVBoxLayout,
-    QSpinBox,
-    QDoubleSpinBox,
     QCheckBox,
     QColorDialog,
     QComboBox,
-    QPushButton,
+    QDialog,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QFormLayout,
     QHBoxLayout,
     QLabel,
+    QPushButton,
+    QSpinBox,
+    QVBoxLayout,
 )
-from PySide6.QtGui import QColor
 
-from ..go.board import MAX_BOARD_SIZE
 from ..engine.settings import (
-    KataRules, KO_RULES, SCORING_RULES, TAX_RULES,
-    WHITE_HANDICAP_BONUS_RULES, PRESET_BUTTONS, PRESETS,
+    KO_RULES,
+    PRESET_BUTTONS,
+    PRESETS,
+    SCORING_RULES,
+    TAX_RULES,
+    WHITE_HANDICAP_BONUS_RULES,
+    KataRules,
 )
+from ..go.board import MAX_BOARD_SIZE
 from .settings import Prefs
 
 

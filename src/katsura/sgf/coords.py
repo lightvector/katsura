@@ -12,8 +12,8 @@ that on *read* (see :func:`sgf_to_move`) but always *write* passes as ``[]``.
 
 from __future__ import annotations
 
-from typing import NamedTuple
 from collections.abc import Iterable
+from typing import NamedTuple
 
 # The SGF coordinate alphabet: a..z (0..25) then A..Z (26..51).
 _LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

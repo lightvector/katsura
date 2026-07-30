@@ -2,9 +2,9 @@
 
 import pytest
 
-from katsura.go.board import BLACK, WHITE, EMPTY
-from katsura.model.game import Game, GameError, parse_board_size
+from katsura.go.board import BLACK, EMPTY, WHITE
 from katsura.model import markup as M
+from katsura.model.game import Game, GameError, parse_board_size
 from katsura.sgf.coords import Point
 from katsura.sgf.tree import parse_collection, serialize_collection
 

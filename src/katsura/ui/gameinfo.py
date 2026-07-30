@@ -10,7 +10,7 @@ independently. The collapsible header/toggle is supplied by
 from __future__ import annotations
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QWidget, QGridLayout, QLineEdit, QLabel
+from PySide6.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget
 
 from ..model.game import format_komi_value
 

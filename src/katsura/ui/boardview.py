@@ -4,25 +4,25 @@ from __future__ import annotations
 
 import math
 
-from PySide6.QtCore import Qt, Signal, QRectF, QPointF
+from PySide6.QtCore import QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import (
+    QBrush,
     QColor,
+    QFont,
     QPainter,
     QPen,
-    QBrush,
-    QRadialGradient,
-    QFont,
     QPolygonF,
+    QRadialGradient,
 )
 from PySide6.QtWidgets import QApplication, QWidget
 
 from ..engine.coords import column_label
-from ..go.board import BLACK, WHITE, EMPTY, opponent
+from ..go.board import BLACK, EMPTY, WHITE, opponent
 from ..model import markup as M
 from ..model.game import Game
 from ..model.markup import MarkType
 from ..sgf.coords import Point, sgf_to_move
-from .modes import EditMode, MODE_TO_MARK
+from .modes import MODE_TO_MARK, EditMode
 from .settings import Prefs
 
 # Tools whose clicks "paint": a press starts a stroke that drags continuously.

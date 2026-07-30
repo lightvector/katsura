@@ -9,7 +9,6 @@ widget draws for its coordinate labels.
 
 from __future__ import annotations
 
-
 from ..sgf.coords import Point
 
 # Western column letters, skipping 'I' — identical to the board view's labels

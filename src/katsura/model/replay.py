@@ -26,7 +26,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from ..go.board import Board, BLACK, WHITE, EMPTY, ILLEGAL_STATUSES, opponent
+from ..go.board import BLACK, EMPTY, ILLEGAL_STATUSES, WHITE, Board, opponent
 from ..sgf.coords import Point, SgfCoordError, parse_point_list, sgf_to_move
 from ..sgf.tree import SgfNode
 from . import markup as M

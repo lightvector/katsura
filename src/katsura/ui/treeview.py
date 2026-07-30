@@ -19,13 +19,12 @@ never throws you far forward/back).
 
 from __future__ import annotations
 
-
-from PySide6.QtCore import Qt, Signal, QPointF, QRectF, QSize
-from PySide6.QtGui import QPainter, QColor, QPen, QBrush, QFont, QRadialGradient
+from PySide6.QtCore import QPointF, QRectF, QSize, Qt, Signal
+from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QRadialGradient
 from PySide6.QtWidgets import QScrollArea, QWidget
 
-from ..model.game import Game
 from ..model import markup as M
+from ..model.game import Game
 from ..sgf.tree import SgfNode
 
 CELL = 26

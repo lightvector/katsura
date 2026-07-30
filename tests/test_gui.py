@@ -226,8 +226,8 @@ def test_paste_subtree_is_undoable(qapp):
 def test_deep_dense_game_loads_without_recursion_crash(qapp):
     """Tree layout, move numbers, and subtree copy on a game whose depth (and
     branch nesting) far exceeds the Python recursion limit."""
-    from katsura.sgf.tree import SgfNode
     from katsura.model.game import Game
+    from katsura.sgf.tree import SgfNode
     from katsura.ui.mainwindow import MainWindow
 
     root = SgfNode()
@@ -307,6 +307,7 @@ def test_ctrl_arrows_switch_and_move_tabs(qapp):
 
 def test_untitled_tabs_are_numbered(qapp):
     import re
+
     from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     w._add_tab(Document.new(9))
@@ -433,8 +434,8 @@ def test_play_modifiers(qapp):
 
 
 def test_play_stone_and_setup_tools(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -455,8 +456,8 @@ def test_play_stone_and_setup_tools(qapp):
 
 
 def test_setup_capture_baked_via_clicks(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -474,8 +475,8 @@ def test_setup_capture_baked_via_clicks(qapp):
 
 
 def test_setup_force_ghost_then_toggle_off(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -494,8 +495,8 @@ def test_setup_force_ghost_then_toggle_off(qapp):
 
 
 def test_setup_opposite_colour_click_erases_first(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -528,8 +529,8 @@ def test_setup_drag_from_empty_overwrites_opposite(qapp):
 
 
 def test_setup_drag_from_stone_erases_across_colours(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -563,8 +564,8 @@ def test_board_renders_with_ghost(qapp):
 
 
 def test_paint_stroke_resolves_captures(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     g = tab.game
@@ -616,8 +617,8 @@ def test_selection_tool_copy_paste(qapp):
 
 
 def test_selection_cut_and_move_undo(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     w.set_mode(EditMode.SETUP)
@@ -638,8 +639,8 @@ def test_selection_cut_and_move_undo(qapp):
 
 
 def test_rotate_whole_board_via_tab_and_undo(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     w.set_mode(EditMode.PLAY)
@@ -654,8 +655,8 @@ def test_rotate_whole_board_via_tab_and_undo(qapp):
 
 
 def test_delete_key_erases_selection(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     w.set_mode(EditMode.SETUP)
@@ -701,8 +702,8 @@ def test_selecting_empty_region_clears_selection(qapp):
 
 
 def test_paint_stroke_setup(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     w.set_mode(EditMode.SETUP)
@@ -717,8 +718,8 @@ def test_paint_stroke_setup(qapp):
 
 
 def test_paint_stroke_erases_when_started_on_stone(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.go.board import EMPTY
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     w.set_mode(EditMode.SETUP)
@@ -996,6 +997,7 @@ def test_tree_culling_matches_bruteforce(qapp):
     so pruning never drops (nor adds) a node or connector that touches the rect.
     """
     from PySide6.QtCore import QRectF
+
     from katsura.ui.mainwindow import MainWindow
     from katsura.ui.treeview import CELL
 
@@ -1140,8 +1142,8 @@ def test_sgf_komi_field(qapp):
 
 
 def test_engine_settings_toolbar(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.engine.settings import PRESETS
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     # Compact labels; each label shares its spin box's explanatory tooltip.
@@ -1177,8 +1179,8 @@ def test_engine_settings_toolbar(qapp):
 
 
 def test_rules_dialog_preset_button_selection(qapp):
-    from katsura.ui.dialogs import RulesDialog
     from katsura.engine.settings import PRESETS, KataRules
+    from katsura.ui.dialogs import RulesDialog
 
     # Opening with rules that exactly match a preset pre-selects its button,
     # exactly as if it had just been clicked.
@@ -1219,6 +1221,7 @@ def test_show_overlay_always_starts_selected(qapp, tmp_path, monkeypatch):
     """show_analysis_overlay is session-only: a persisted 'off' must never make
     move-analysis info start hidden on the next run."""
     from PySide6.QtCore import QSettings
+
     import katsura.ui.settings as S
 
     ini = str(tmp_path / "prefs.ini")
@@ -1237,6 +1240,7 @@ def test_settings_never_touch_the_real_store(qapp, settings_dir):
     """Guards the conftest redirect: tests save real Prefs, and writing them to
     the store the installed app reads would overwrite the developer's own."""
     from PySide6.QtCore import QSettings
+
     from katsura import APP, ORG
 
     assert QSettings(ORG, APP).fileName().startswith(str(settings_dir))
@@ -1269,7 +1273,7 @@ def test_view_menu_ownership_policy_toggles_and_mark_glyphs(qapp):
 def test_number_keys_select_tools(qapp):
     """Bare '1'-'9' pick a tool, in toolbar order."""
     from katsura.ui.mainwindow import MainWindow
-    from katsura.ui.modes import EditMode, MODE_KEY_ORDER
+    from katsura.ui.modes import MODE_KEY_ORDER, EditMode
     w = MainWindow()
     tab = w.current_tab()
 
@@ -1362,6 +1366,7 @@ def test_hotkey_hints_never_activate_as_shortcuts(qapp):
     on a visible toolbar) and switch the tool.
     """
     from PySide6.QtTest import QTest
+
     from katsura.ui.mainwindow import MainWindow
     from katsura.ui.modes import EditMode
     w = MainWindow()
@@ -1383,6 +1388,7 @@ def test_typing_in_the_comment_box_is_not_a_hotkey(qapp):
     normally while the comment editor has focus."""
     from PySide6.QtCore import QEvent
     from PySide6.QtGui import QKeyEvent
+
     from katsura.ui.mainwindow import MainWindow
     from katsura.ui.modes import EditMode
     w = MainWindow()
@@ -1409,6 +1415,7 @@ def test_typing_in_the_comment_box_is_not_a_hotkey(qapp):
 
 def test_pass_button_on_toolbar(qapp):
     from PySide6.QtWidgets import QToolBar
+
     from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
@@ -1429,8 +1436,8 @@ def test_pass_button_on_toolbar(qapp):
 
 
 def test_engine_menu_labels_and_rules_entry(qapp):
+    from katsura.engine.settings import PRESETS, KataRules
     from katsura.ui.mainwindow import MainWindow
-    from katsura.engine.settings import KataRules, PRESETS
     w = MainWindow()
     tab = w.current_tab()
 
@@ -1496,6 +1503,7 @@ def test_analysis_panel_no_result_always_rounds(qapp):
 def test_menu_action_tooltips_are_reachable(qapp):
     """Menus must opt in to showing action tooltips; ours carry real help."""
     from PySide6.QtWidgets import QMenu
+
     from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     menus = w.menuBar().findChildren(QMenu)
@@ -1533,10 +1541,10 @@ def test_min_weight_pref_drops_circle_and_label_together(qapp):
     """Below the threshold a candidate is not drawn at all — the old behaviour
     kept the circle and dropped only the number."""
     from katsura.engine.analysis import parse_analysis_line
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.dialogs import PreferencesDialog
     from katsura.ui.settings import Prefs
-    from katsura.model.game import Game
 
     prefs = Prefs()
     assert prefs.analysis_min_weight == 0.002        # 0.2% of the top weight
@@ -1577,10 +1585,10 @@ def test_label_threshold_keeps_the_circle(qapp):
     """Between the two thresholds a move keeps its circle and loses its numbers
     — the board still shows where the search looked."""
     from katsura.engine.analysis import parse_analysis_line
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.dialogs import PreferencesDialog
     from katsura.ui.settings import Prefs
-    from katsura.model.game import Game
 
     prefs = Prefs()
     assert prefs.analysis_min_weight == 0.002        # drawn at all: 0.2%
@@ -1626,9 +1634,9 @@ def _intersection_pixels(bv, pt) -> list:
 def test_ownership_hover_shows_percent(qapp):
     """With the heatmap on, hovering a point reports Black's share of it."""
     from katsura.engine.analysis import parse_analysis_line
+    from katsura.model.game import Game
     from katsura.ui.boardview import BoardView
     from katsura.ui.settings import Prefs
-    from katsura.model.game import Game
 
     bv = BoardView(Prefs())
     bv.set_game(Game.new(19))
@@ -1749,9 +1757,10 @@ def test_analysis_info_engine_selector(qapp):
 
 
 def test_spinner_and_inert_click_focus(qapp):
-    from PySide6.QtWidgets import QApplication, QStyle, QStyleOptionSpinBox
     from PySide6.QtTest import QTest
-    from katsura.ui.mainwindow import MainWindow, _TEXT_WIDGETS
+    from PySide6.QtWidgets import QApplication, QStyle, QStyleOptionSpinBox
+
+    from katsura.ui.mainwindow import _TEXT_WIDGETS, MainWindow
     w = MainWindow(); w.resize(1180, 820); w.show(); qapp.processEvents()
     tab = w.current_tab()
 
@@ -1792,9 +1801,9 @@ def test_spinner_and_inert_click_focus(qapp):
 
 
 def test_analysis_interval_pref(qapp):
-    from katsura.ui.mainwindow import MainWindow
-    from katsura.ui.dialogs import PreferencesDialog
     from katsura.engine.controller import AnalysisController
+    from katsura.ui.dialogs import PreferencesDialog
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     # Default reporting period flows into a controller made at attach time
     # (attach_engine passes prefs.analysis_interval_cs).
@@ -1813,8 +1822,8 @@ def test_analysis_interval_pref(qapp):
 
 
 def test_game_info_fields_and_undo(qapp):
-    from katsura.ui.mainwindow import MainWindow
     from katsura.ui.document import Document
+    from katsura.ui.mainwindow import MainWindow
     w = MainWindow()
     tab = w.current_tab()
     tab.on_info_field_edited("PB", "Black Player")
@@ -1838,6 +1847,7 @@ def test_game_info_fields_and_undo(qapp):
 
 def test_collapsible_section_fixed_vs_growable(qapp):
     from PySide6.QtWidgets import QLabel
+
     from katsura.ui.collapsible import CollapsibleSection
 
     # Compact (non-growable) section: a fixed open height, not resizable.
@@ -1865,6 +1875,7 @@ def test_collapsible_section_fixed_vs_growable(qapp):
 
 def test_pane_grip_resizes_section_above(qapp):
     from PySide6.QtWidgets import QLabel
+
     from katsura.ui.collapsible import CollapsibleSection, PaneGrip
 
     sec = CollapsibleSection("T", QLabel("b"), expanded=True, growable=True,

@@ -43,8 +43,8 @@ from PySide6.QtCore import Qt  # noqa: E402  (after platform setup)
 from PySide6.QtGui import QGuiApplication  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from .mainwindow import MainWindow  # noqa: E402
 from .. import APP, ORG  # noqa: E402
+from .mainwindow import MainWindow  # noqa: E402
 from .settings import Prefs  # noqa: E402
 
 

@@ -4,24 +4,24 @@ from __future__ import annotations
 
 import json
 
-from PySide6.QtCore import Qt, QSettings
+from PySide6.QtCore import QSettings, Qt
 from PySide6.QtWidgets import (
     QDialog,
     QDialogButtonBox,
+    QFileDialog,
     QHBoxLayout,
-    QVBoxLayout,
-    QListWidget,
-    QListWidgetItem,
-    QPushButton,
     QLabel,
     QLineEdit,
-    QPlainTextEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
-    QFileDialog,
+    QPlainTextEdit,
+    QPushButton,
+    QVBoxLayout,
 )
 
 from ..engine.config import EngineConfig
-from .settings import ORG, APP
+from .settings import APP, ORG
 
 
 class EngineEditDialog(QDialog):

@@ -16,14 +16,20 @@ never clip — a flat pixel width fails under the native-Windows HiDPI font.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QSize, QTimer, Qt, Signal
+from PySide6.QtCore import QSize, Qt, QTimer, Signal
 from PySide6.QtWidgets import (
-    QDoubleSpinBox, QMenu, QStyle, QStyleOptionSpinBox, QToolButton,
+    QDoubleSpinBox,
+    QMenu,
+    QStyle,
+    QStyleOptionSpinBox,
+    QToolButton,
 )
 
 from ..engine.settings import (
-    KOMI_LIMIT, PDA_LIMIT,
-    step_wide_root_noise, step_pda,
+    KOMI_LIMIT,
+    PDA_LIMIT,
+    step_pda,
+    step_wide_root_noise,
 )
 
 

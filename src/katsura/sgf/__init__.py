@@ -6,12 +6,12 @@ independently of the Qt front end.
 
 from .coords import (
     Point,
-    point_to_sgf,
-    sgf_to_point,
     parse_point_list,
     point_list_to_sgf,
+    point_to_sgf,
+    sgf_to_point,
 )
-from .tree import SgfNode, parse_collection, serialize_collection, SgfParseError
+from .tree import SgfNode, SgfParseError, parse_collection, serialize_collection
 
 __all__ = [
     "Point",

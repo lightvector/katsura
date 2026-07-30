@@ -25,10 +25,10 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from ..go.board import Board, BLACK, WHITE, EMPTY, MOVE_SUICIDE_MULTI
+from ..go.board import BLACK, EMPTY, MOVE_SUICIDE_MULTI, WHITE, Board
 from ..model.replay import apply_node
 from ..sgf.coords import Point
-from .settings import AnalysisSettings, DEFAULT_RULES, clamp_komi, sgf_rules
+from .settings import DEFAULT_RULES, AnalysisSettings, clamp_komi, sgf_rules
 
 GTP_COLOR = {BLACK: "B", WHITE: "W"}
 

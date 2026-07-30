@@ -12,23 +12,29 @@ undo state.
 
 from __future__ import annotations
 
-
+from .. import __version__
 from ..go.board import (
-    Board, BLACK, WHITE, EMPTY,
-    ILLEGAL_OCCUPIED, ILLEGAL_OFF_BOARD, ILLEGAL_SUICIDE_SINGLE,
-    MAX_BOARD_SIZE, MOVE_OK, MOVE_SUICIDE_MULTI,
+    BLACK,
+    EMPTY,
+    ILLEGAL_OCCUPIED,
+    ILLEGAL_OFF_BOARD,
+    ILLEGAL_SUICIDE_SINGLE,
+    MAX_BOARD_SIZE,
+    MOVE_OK,
+    MOVE_SUICIDE_MULTI,
+    WHITE,
+    Board,
 )
 from ..sgf.coords import (
     Point,
     SgfCoordError,
+    move_to_sgf,
     parse_point_list,
     point_list_to_sgf,
     point_to_sgf,
     sgf_to_move,
     sgf_to_point,
-    move_to_sgf,
 )
-from .. import __version__
 from ..sgf.tree import SgfNode
 from . import markup as M
 from .replay import NodeApplication, apply_node, move_point_of

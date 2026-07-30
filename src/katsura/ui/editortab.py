@@ -5,25 +5,25 @@ from __future__ import annotations
 from dataclasses import replace
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QFont, QColor
+from PySide6.QtGui import QColor, QFont
 from PySide6.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
     QHBoxLayout,
-    QSplitter,
-    QScrollArea,
-    QPlainTextEdit,
-    QLabel,
     QInputDialog,
+    QLabel,
     QMessageBox,
+    QPlainTextEdit,
+    QScrollArea,
+    QSplitter,
+    QVBoxLayout,
+    QWidget,
 )
 
-from ..go.board import BLACK, WHITE, opponent
 from ..engine.coords import point_label
 from ..engine.position import initial_settings
 from ..engine.settings import clamp_komi
-from ..model.game import Game, GameError, fit_subtree_to_board
+from ..go.board import BLACK, WHITE, opponent
 from ..model import markup as M
+from ..model.game import Game, GameError, fit_subtree_to_board
 from ..sgf.coords import Point
 from .analysispanel import AnalysisInfoPanel
 from .boardview import BoardView
@@ -31,11 +31,10 @@ from .collapsible import CollapsibleSection, PaneGrip
 from .document import Document
 from .enginecontrols import EngineSelectorButton
 from .gameinfo import SgfInfoWidget
-from .modes import EditMode, MODE_TO_MARK, RAW_NN_KEY_ORDER
-from .selection import rotate_cw, flip_h
+from .modes import MODE_TO_MARK, RAW_NN_KEY_ORDER, EditMode
+from .selection import flip_h, rotate_cw
 from .settings import Prefs
 from .treeview import VariationTree
-
 
 # With Shift held, most platforms report the *shifted* character rather than the
 # digit key (Shift+1 -> Key_Exclam), so both spellings map back to the digit.

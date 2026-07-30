@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 from PySide6.QtCore import QSettings
 
-from .. import APP, ORG        # re-exported: UI modules import them from here
+from .. import APP, ORG  # re-exported: UI modules import them from here
 from ..engine.settings import DEFAULT_INTERVAL_CS
 
 

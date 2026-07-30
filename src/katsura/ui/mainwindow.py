@@ -4,41 +4,46 @@ from __future__ import annotations
 
 import os
 
-from PySide6.QtCore import Qt, QEvent, QSettings
+from PySide6.QtCore import QEvent, QSettings, Qt
 from PySide6.QtGui import QAction, QActionGroup, QKeySequence
 from PySide6.QtWidgets import (
-    QMainWindow,
-    QWidget,
-    QTabWidget,
-    QFileDialog,
-    QMessageBox,
-    QMenu,
-    QToolBar,
-    QToolButton,
+    QAbstractSpinBox,
     QApplication,
+    QComboBox,
+    QFileDialog,
     QLabel,
     QLineEdit,
+    QMainWindow,
+    QMenu,
+    QMessageBox,
     QPlainTextEdit,
+    QTabWidget,
     QTextEdit,
-    QAbstractSpinBox,
-    QComboBox,
+    QToolBar,
+    QToolButton,
+    QWidget,
 )
 
-from ..go.board import BLACK, WHITE
 from ..engine.config import EngineConfig, load_engines, save_engines
 from ..engine.controller import AnalysisController
 from ..engine.settings import clamp_komi, preset_name
+from ..go.board import BLACK, WHITE
+from .console import GtpConsole
+from .dialogs import NewGameDialog, PreferencesDialog, RulesDialog
 from .document import Document
 from .editortab import EditorTab
-from .dialogs import NewGameDialog, PreferencesDialog, RulesDialog
-from .enginecontrols import KomiSpinBox, WideRootNoiseSpinBox, PdaSpinBox
+from .enginecontrols import KomiSpinBox, PdaSpinBox, WideRootNoiseSpinBox
 from .enginedialog import EngineManagerDialog
-from .console import GtpConsole
 from .modes import (
-    EditMode, MODE_LABELS, MODE_GLYPHS, MODE_HELP, MODE_HOTKEY, MODE_KEY_ORDER,
+    MODE_GLYPHS,
+    MODE_HELP,
+    MODE_HOTKEY,
+    MODE_KEY_ORDER,
+    MODE_LABELS,
     RAW_NN_KEY_ORDER,
+    EditMode,
 )
-from .settings import Prefs, ORG, APP
+from .settings import APP, ORG, Prefs
 
 # Editing/navigation keys are dispatched at the application level (so they work
 # no matter which non-text widget has focus) via EditorTab.handle_key. Text
