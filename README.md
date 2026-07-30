@@ -75,6 +75,10 @@ python -m katsura            # launch the GUI
 katsura
 ```
 
+`ruff check .` must pass; CI runs it alongside the suite on every push. Commit
+hooks that catch the same things earlier are available but optional —
+`pip install pre-commit && pre-commit install`.
+
 ### Running on Linux / WSL
 
 Qt offers two platform plugins here and neither is perfect under WSLg, so the

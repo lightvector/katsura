@@ -1,0 +1,34 @@
+# Optional local commit hooks. Install once per clone:
+#
+#     pip install pre-commit && pre-commit install
+#
+# These are a convenience, not the gate — they can be skipped with --no-verify
+# and are absent until someone installs them. CI (.github/workflows/ci.yml) is
+# what actually decides whether a change is acceptable; these just catch the
+# cheap things before you push and wait for it.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Keep in step with the ruff pin in pyproject.toml's dev extra. They are
+    # separate versions, so bump them together or the hook and CI will disagree
+    # about what passes.
+    rev: v0.16.0
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      # The workflows and pyproject are parsed by machines that report failures
+      # slowly (a CI run) or obscurely (a build backend); catch malformed ones
+      # at commit time instead.
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      # Screenshots are legitimate; a stray model file or build artifact is not.
+      - id: check-added-large-files
+        args: [--maxkb=1024]

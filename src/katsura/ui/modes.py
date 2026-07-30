@@ -103,4 +103,3 @@ MODE_HELP: dict[EditMode, list[str]] = {
         "Ctrl+X cut · Ctrl+C copy → click to paste (r rotate, f flip, Esc cancel)",
     ],
 }
-
