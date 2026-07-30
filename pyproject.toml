@@ -28,7 +28,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
-    "ruff>=0.1",
+    # Pinned exactly: an unpinned linter turns an upstream release into a
+    # broken build. Bump deliberately, reviewing whatever new rules it brings.
+    "ruff==0.16.0",
 ]
 
 [project.gui-scripts]
@@ -46,6 +48,12 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+
+[tool.ruff.lint]
+# Stated explicitly rather than inherited: ruff's default selection widens
+# between releases, and a lint gate whose meaning changes under you is worse
+# than no gate. Adding a rule family here should be a deliberate commit.
+select = ["E4", "E7", "E9", "F"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests lean on `a = 1; b = 2` to keep multi-step GUI setup compact and
